@@ -48,7 +48,7 @@ const userController = {
             profile: req.body.profile
           });
 
-          console.log(newUser)
+          console.log(req.body.username)
           
           await User.create(newUser);
           res.json(newUser)

@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+import db from '../../config/database.js';
 
 const sequelize = new Sequelize(db.development.database, db.development.username, db.development.password, {
   host: db.development.host,
@@ -21,3 +21,18 @@ async function connectionTest () {
 }
 
 connectionTest();
+
+/*
+async function closeConnection () {
+  try {
+    await sequelize.close()
+    console.log('Connection has been closed successfully.')
+  } catch (error) {
+    console.error('Unable to close connection', error)
+  }
+};
+
+function timeOutClosure () {
+  setTimeout(closeConnection, 3000)
+};
+*/

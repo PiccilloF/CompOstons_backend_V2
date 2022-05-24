@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/index.js'
+import sequelize from '../database/index.js';
 //defining user Model
 
   class User extends Model{
@@ -8,7 +8,6 @@ import sequelize from '../../database/index.js'
       // define association here
       this.hasMany(models.Compost, {as: 'composts'});
       this.hasMany(models.Article, {as: 'articles' } );
-      this.hasMany(models.Role, {as: 'roles'});
     }
 
     toJSON() {
@@ -73,6 +72,10 @@ import sequelize from '../../database/index.js'
       allowNull:false,
       defaultValue: 'chercheur',
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     tableName: 'user',
