@@ -1,4 +1,7 @@
 // Global environment variables file
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 export default {
   port: parseInt(process.env.PORT) || 8080,
