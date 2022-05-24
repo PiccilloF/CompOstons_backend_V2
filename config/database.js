@@ -1,12 +1,12 @@
 // The DB environment variables to manage connection 
 
-module.exports = {
+export default {
   development: {
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
+    username: process.env.DB_USERNAME || 'compostons',
+    password: process.env.DB_PASSWORD || 'compost38',
     host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT) || 5434,
-    database: process.env.DB_DATABASE || 'postgres',
+    port: parseInt(process.env.DB_PORT) || 5432,
+    database: process.env.DB_DATABASE || 'compostons_db',
     dialect: 'postgres'
   },
   test: {
