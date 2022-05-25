@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import db from '../../config/database.js';
+const db = require('../../config/database')
 
 const sequelize = new Sequelize(db.development.database, db.development.username, db.development.password, {
   host: db.development.host,

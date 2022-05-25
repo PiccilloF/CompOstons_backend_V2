@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node dist/server.js",
     "dev": "NODE_ENV=developpment nodemon --exec babel-node index.js"

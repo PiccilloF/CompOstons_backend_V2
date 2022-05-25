@@ -1,5 +1,5 @@
 // Global environment variables file
-import dotenv from 'dotenv'
+const dotenv = require('dotenv');
 
 dotenv.config();
 

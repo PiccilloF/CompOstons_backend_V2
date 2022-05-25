@@ -1,4 +1,4 @@
-import User  from '../models/user.js';
+import User from '../models/user.js';
 import bcrypt from 'bcrypt';
 import emailValidator from 'email-validator';
 import environment from '../../config/environment.js';

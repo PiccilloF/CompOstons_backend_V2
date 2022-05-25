@@ -1,8 +1,8 @@
 // The DB environment variables to manage connection 
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
 
-export default {
+module.exports = {
   development: {
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',

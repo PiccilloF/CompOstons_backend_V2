@@ -6,7 +6,7 @@ import sequelize from '../database/index.js';
 
     static associate(models) {
       // define association here
-      this.hasMany(models.Compost, {as: 'composts'});
+      this.hasMany(models, {as: 'composts'});
       this.hasMany(models.Article, {as: 'articles' } );
     }
 
