@@ -1,7 +1,7 @@
-import User from '../models/user.js';
-import bcrypt from 'bcrypt';
-import emailValidator from 'email-validator';
-import environment from '../../config/environment.js';
+const { User } = require('../models')
+const bcrypt = require('bcrypt');
+const emailValidator = require('email-validator');
+const environment = require('../../config/environment');
 
 const userController = { 
 
@@ -9,7 +9,7 @@ const userController = {
     try {
       const users = await User.findAll({
         include: [
-            { association: 'composts', include: 'wastes' },
+            { association: 'composts', include: 'wasteCategories' },
             { association: 'articles' },
         ]
       });
@@ -24,14 +24,6 @@ const userController = {
   /* creating newUser need many controls */
   createUser: async (req, res) => {
     try {
-      const user = await User.findOne({
-        where: {
-          email: req.body.email
-        }
-      });
-      if (user) {
-        res.send('Cet email est déjà utilisé par un utilisateur');
-      }
         if (!emailValidator.validate(req.body.email)) {
           return res.send('Cet email n\'est pas valide.')
           };
@@ -60,4 +52,4 @@ const userController = {
   
 }
 
-export default userController;
+module.exports = userController;

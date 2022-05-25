@@ -1,20 +1,12 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../database/index.js';
+const {DataTypes, Model} = require('sequelize');
+const sequelize = require('../database/index');
 //defining user Model
 
   class User extends Model{
 
-    static associate(models) {
-      // define association here
-      this.hasMany(models, {as: 'composts'});
-      this.hasMany(models.Article, {as: 'articles' } );
-    }
-
     toJSON() {
       return {...this.get(), id: undefined}
     }
-
-
   }
   User.init({
     uuid: {
@@ -84,6 +76,6 @@ import sequelize from '../database/index.js';
 
   console.log(User === sequelize.models.User);
 
-  export default User;
+module.exports = User;
 
 

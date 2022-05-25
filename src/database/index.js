@@ -1,13 +1,14 @@
-import { Sequelize } from 'sequelize';
-const db = require('../../config/database')
+const { Sequelize } = require('sequelize');
+const db = require('../../config/database');
 
-const sequelize = new Sequelize(db.development.database, db.development.username, db.development.password, {
+const sequelize = new Sequelize(db.development.database, db.development.username,db.development.password, {
   host: db.development.host,
   dialect: db.development.dialect
 });
 
-console.log(db.development.database)
-export default sequelize;
+
+module.exports = sequelize;
+
 
 /* PG database connection test */
 
@@ -36,3 +37,4 @@ function timeOutClosure () {
   setTimeout(closeConnection, 3000)
 };
 */
+

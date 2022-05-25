@@ -1,5 +1,5 @@
-import {Router} from 'express';
-import userController from './controllers/userController.js';
+const {Router} = require ('express');
+const userController = require ('./controllers/userController');
 
 const router = Router();
 /*
@@ -14,4 +14,4 @@ router.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-export default router
+module.exports = router;

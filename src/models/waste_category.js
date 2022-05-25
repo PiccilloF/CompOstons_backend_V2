@@ -1,5 +1,5 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../database/index.js';
+const {DataTypes, Model} = require('sequelize');
+const sequelize = require('../database/index');
 
   class Waste_category extends Model {
     /**
@@ -7,10 +7,6 @@ import sequelize from '../database/index.js';
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({models}) {
-      // define association here
-      this.belongsToMany(models.Compost, {through: 'compost_has_wasteCategory', as: 'wastes'});
-    }
   }
   Waste_category.init({
     uuid: {
@@ -27,4 +23,4 @@ import sequelize from '../database/index.js';
     modelName: 'Waste_category',
   });
   
-    export default Waste_category;
+    module.exports = Waste_category;

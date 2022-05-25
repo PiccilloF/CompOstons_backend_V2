@@ -1,5 +1,5 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/index.js';
+const {DataTypes, Model} = require('sequelize');
+const sequelize = require('../database/index');
 
   class Compost_has_waste extends Model {
     /**
@@ -34,4 +34,4 @@ import sequelize from '../../database/index.js';
     modelName: 'Compost_has_wasteCategory',
   });
   
-  export default Compost_has_waste;
+  module.exports = Compost_has_waste;

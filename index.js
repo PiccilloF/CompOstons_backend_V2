@@ -1,6 +1,6 @@
 // environment variables are loaded as soon in the project
-import environment from './config/environment.js'
-import express from 'express';
+const environment = require('./config/environment');
+const express  = require('express'); ;
 
 
 // Default and set server port
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routing
-import router from './src/router.js';
+const router = require('./src/router');
 app.use(router);
 
 // server launch

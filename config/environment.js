@@ -3,9 +3,9 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-export default {
-  port: parseInt(process.env.PORT) || 8080,
+module.exports = {
   nodeEnv: process.env.NODE_ENV || 'production',
+  port: parseInt(process.env.PORT) || 8080,
   saltRounds: parseInt(process.env.SALT_ROUNDS) || 10,
   jwtAccessTokenSecret: 
   process.env.JWT_ACCESS_TOKEN_SECRET || 
