@@ -35,3 +35,4 @@ module.exports = {
     await queryInterface.dropTable('compost_has_wasteCategory');
   }
 }
+

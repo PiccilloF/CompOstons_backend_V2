@@ -17,10 +17,9 @@ const compostController = {
   },
 
   getOneCompost: async (req, res) => {
+        let compostId = req.params.id;
     try {
-      const compostId = req.params.id;
-      const compost = await Compost.findByPk({
-        compostId,
+        const compost = await Compost.findByPk(compostId,{
         include: [
           { association: 'user' },
           { association: 'wasteCategories' }
@@ -70,7 +69,8 @@ const compostController = {
   },
 
   deleteCompost: async (req, res) => {
-    let compostId = req.body.id;
+    let compostId = req.params.id;
+    console.log(compostId)
     try{
       const compost = await Compost.findByPk(compostId);
       if(!compost) {

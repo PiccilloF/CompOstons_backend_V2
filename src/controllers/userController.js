@@ -23,9 +23,13 @@ const userController = {
 
   getOneUser: async (req, res) => {
     let userId = req.params.id;
-    console.log(userId)
     try {
-      const user = await User.findByPk(userId);
+      const user = await User.findByPk(userId, {
+        include: [
+          { association: 'composts', include: 'wasteCategories' },
+          { association: 'articles' },
+        ]
+      });
       res.json(user);
     } catch(error) {
       console.trace(error)

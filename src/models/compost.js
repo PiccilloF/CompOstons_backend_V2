@@ -2,11 +2,6 @@ const {DataTypes, Model} = require('sequelize');
 const sequelize = require('../database/index');
 
   class Compost extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
 
     toJSON() {
       return { ...this.get(), UserId: undefined, id:undefined }
@@ -35,7 +30,14 @@ const sequelize = require('../database/index');
     },
     UserId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+        references: {
+          model: 'user',
+          key:'id',
+          as: 'UserId'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
     }
   }, {
     sequelize,

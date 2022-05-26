@@ -2,11 +2,6 @@ const {DataTypes, Model} = require('sequelize');
 const sequelize = require('../database/index');
 
 class Article extends Model {
-  /**
-   * Helper method for defining associations.
-   * This method is not a part of Sequelize lifecycle.
-   * The `models/index` file will call this method automatically.
-   */
 
   toJSON() {
     return{ ...this.get(), id: undefined, UserId: undefined}

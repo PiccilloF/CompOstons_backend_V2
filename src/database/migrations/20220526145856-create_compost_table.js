@@ -31,7 +31,14 @@ module.exports = {
       },
       UserId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'user',
+          key:'id',
+          as: 'UserId'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -47,3 +54,4 @@ module.exports = {
     await queryInterface.dropTable('compost');
   }
 }
+
