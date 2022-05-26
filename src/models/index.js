@@ -19,7 +19,7 @@ Waste_category.belongsToMany(Compost, {
   otherKey: 'WasteCategoryId'
 })
 
-// User can write Many articles
+// compost belongs to one user
 Compost.belongsTo(User, {
   foreignKey: 'UserId',
   as: 'user'
