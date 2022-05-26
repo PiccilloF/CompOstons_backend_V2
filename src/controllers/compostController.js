@@ -1,4 +1,4 @@
-const { Compost } = require('../models');
+const { Compost, User, Waste_category } = require('../models');
 
 const compostController = {
   getAllcomposts: async (req, res) => {
@@ -37,29 +37,45 @@ const compostController = {
   },
 
   createCompost: async (req, res) => {
+    let userId = req.body.UserId;
     try {
-      const newCompost = req.body;
-      await Compost.create(newCompost);
+      const user = await User.findByPk(userId);
+    if (userId != user.id) {
+      res.status(404).json('there is no user with id' + userId)
+    } 
+      
+      const newCompost = await Compost.create({
+        address : req.body.address,
+        longitude: req.body.longitude,
+        latitude: req.body.latitude,
+        availability: req.body.availability,
+        UserId : req.body.UserId
+      });
+
+      
       res.json(newCompost);
     } catch (error) {
       res.status(404).json(error.toString());
     }
   },
 
-  // Update an delete methods here
+  
   updateCompost: async (req, res) => {
     let compostId = req.params.id;
     try {
       const { address, longitude, latitude, availability} = req.body;
       const compost = await Compost.findByPk(compostId);
-      if (!compost) {
-        return res.status(404).json('can\'t find compost with id:'+ compostId); 
-      };
-      // if compost was found, he was updated
-      compost.address = address || compost.address;
-      compost.longitude = longitude || compost.longitude;
-      compost.latitude = latitude || compost.latitude;
-      compost.availability = availability || compost.availability;
+    if (!compost) {
+      return res.status(404).json('can\'t find compost with id:'+ compostId); 
+    };
+      // if compost was found, it was updated
+      compost.update(
+      compost.address = address || compost.address,
+      compost.longitude = longitude || compost.longitude,
+      compost.latitude = latitude || compost.latitude,
+      compost.availability = availability || compost.availability,
+      )
+      
       await compost.save();
       res.json(compost);
     } catch (error) {
@@ -70,16 +86,28 @@ const compostController = {
 
   deleteCompost: async (req, res) => {
     let compostId = req.params.id;
-    console.log(compostId)
     try{
       const compost = await Compost.findByPk(compostId);
       if(!compost) {
-        return res.status(404).json("Can't delete compost with id: " + compostId);
+        return res.status(404).json("Can't find compost with id: " + compostId);
       }
 
       await compost.destroy();
       res.json('Compost deleted !');
     } catch (error) {
+      res.status(500).json(error.toString());
+    }
+  },
+
+  addWasteCategory: async (req, res) => {
+    const wasteCategoryId = req.body.id;
+    const wasteCategory = await Waste_category.findByPk(wasteCategoryId)
+    console.log(wasteCategory)
+    try {
+      const compost = await Compost.findByPk(req.params.id, {include: ['wasteCategories']});
+      await compost.addWasteCategory(wasteCategory, {through: ['wastecategories']})
+    } catch (error) {
+      console.trace(error)
       res.status(500).json(error.toString());
     }
   }

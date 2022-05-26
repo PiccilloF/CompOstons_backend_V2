@@ -30,6 +30,9 @@ const userController = {
           { association: 'articles' },
         ]
       });
+      if (!user) {
+        return res.status(404).json('Can\t find user with id:' + userId);
+      }
       res.json(user);
     } catch(error) {
       console.trace(error)
@@ -78,13 +81,12 @@ const userController = {
   },
 
   updateUser: async (req,res) => {
-      let userId = req.params.id
-      console.log(userId);
+      let userId = req.params.id;
     try{
       const user = await User.findByPk(userId);
 
       if(!userId) {
-        return res.status(404).json("Can't delete user with id: " + userId);
+        return res.status(404).json("Can't find user with id: " + userId);
       }
 
       user.update(
