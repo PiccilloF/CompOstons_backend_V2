@@ -55,9 +55,6 @@ const sequelize = require('../database/index');
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        is: /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm
-      },
     },
     profile:{
       type: DataTypes.STRING,

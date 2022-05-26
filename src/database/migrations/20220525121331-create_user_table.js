@@ -54,11 +54,12 @@ module.exports = {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+      },
       },
       profile:{
         type: DataTypes.STRING,
-        allowNull:false,
+        allowNull: false,
         defaultValue: 'chercheur',
       },
       role: {

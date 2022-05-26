@@ -21,32 +21,98 @@ const userController = {
     }
   },
 
+  getOneUser: async (req, res) => {
+    let userId = req.params.id;
+    console.log(userId)
+    try {
+      const user = await User.findByPk(userId);
+      res.json(user);
+    } catch(error) {
+      console.trace(error)
+      res.status(500).json(error.toString());
+    }
+  },
+
   /* creating newUser need many controls */
   createUser: async (req, res) => {
     try {
+        // Control that user doesn't already exist with unique email
+        const user = await User.findOne({
+          where: {
+            email: req.body.email
+          }
+        });
+        if (user) {
+          return res.send({error:'cet email est deja utilisé '})
+        }
+
+        // email type validation
         if (!emailValidator.validate(req.body.email)) {
           return res.send('Cet email n\'est pas valide.')
           };
-        
+
+          // new password is encrypted before registering in database 
           const salt = await bcrypt.genSalt(environment.saltRounds);
           const encryptedPassword = await bcrypt.hash(req.body.password, salt);
     
-          const newUser = new User({
+          // new instance is created in database
+        
+
+          const newUser = await User.create({
             username: req.body.username,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
             password: encryptedPassword,
-            profile: req.body.profile
+            profile: req.body.profile,
+            role: req.body.role
           });
-
-          console.log(req.body.username)
-          
-          await User.create(newUser);
           res.json(newUser)
         } catch (error) {
           res.status(404).json(error.toString());
         }
+  },
+
+  updateUser: async (req,res) => {
+      let userId = req.params.id
+      console.log(userId);
+    try{
+      const user = await User.findByPk(userId);
+
+      if(!userId) {
+        return res.status(404).json("Can't delete user with id: " + userId);
+      }
+
+      user.update(
+        user.username = req.body.username || user.username,
+        user.firstname = req.body.firstname || user.firstname,
+        user.lastname = req.body.lastname || user.lastname,
+        user.email = req.body.email || user.email,
+        user.profile = req.body.profile || user.profile,
+        user.role = req.body.role || user.role
+      );
+
+      const updatedUser = await user.save();
+      res.json(updatedUser);
+    } catch(error) {
+      res.status(404).json(error.toString());
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    try{
+      let userId = req.params.id;
+      const user = await User.findByPk(userId);
+      // We look if user id exist
+      if(!userId) {
+        return res.status(404).json("Can't delete user with id: " + userId);
+      }
+      // user is deleted
+      await user.destroy();
+      res.json('ok');
+    } catch (error) {
+      res.status(500).json(error.toString());
+    }
   }
   
   

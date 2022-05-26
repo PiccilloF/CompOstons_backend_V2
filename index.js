@@ -1,7 +1,8 @@
 // environment variables are loaded as soon in the project
 const environment = require('./config/environment');
 const express  = require('express'); ;
-
+const router = require('./src/router');
+const bodySanitizer= require('./src/middlewares/bodySanitizer')
 
 // Default and set server port
 const PORT = environment.port || 5050;
@@ -11,8 +12,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// middleware to sanitize req.body before register
+app.use(bodySanitizer);
 // routing
-const router = require('./src/router');
 app.use(router);
 
 // server launch
