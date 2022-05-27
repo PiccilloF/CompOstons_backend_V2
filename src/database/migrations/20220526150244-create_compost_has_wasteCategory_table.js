@@ -22,11 +22,11 @@ module.exports = {
         defaultValue: DataTypes.UUIDV4,
       },
       createdAt: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE
       }
     });

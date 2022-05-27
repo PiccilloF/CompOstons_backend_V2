@@ -30,7 +30,7 @@ router.get('/composts/:id', compostController.getOneCompost);
 router.post('/composts', compostController.createCompost);
 router.put('/composts/:id', compostController.updateCompost);
 router.delete('/composts/:id', compostController.deleteCompost);
-router.post('/composts/addwaste/:id', compostController.addWasteCategory);
+router.post('/composts/:id', compostController.addWasteCategory);
 /*
 * Articles routes
 */

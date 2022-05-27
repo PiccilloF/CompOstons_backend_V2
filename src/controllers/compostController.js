@@ -101,11 +101,18 @@ const compostController = {
 
   addWasteCategory: async (req, res) => {
     const wasteCategoryId = req.body.id;
-    const wasteCategory = await Waste_category.findByPk(wasteCategoryId)
-    console.log(wasteCategory)
+    
     try {
-      const compost = await Compost.findByPk(req.params.id, {include: ['wasteCategories']});
-      await compost.addWasteCategory(wasteCategory, {through: ['wastecategories']})
+      const wasteCategory = await Waste_category.findByPk(wasteCategoryId)
+      console.log(wasteCategory.id)
+      if(!wasteCategory){
+        return res.status(404).json('can\'t find wasteCategory with id:'+ wasteCategoryId); 
+      }
+        const compost = await Compost.findByPk(req.params.id, {include: ['wasteCategories']});
+        await compost.addWasteCategory(wasteCategory, {through: ['wastecategories']});
+        res.json(compost);
+      
+      
     } catch (error) {
       console.trace(error)
       res.status(500).json(error.toString());

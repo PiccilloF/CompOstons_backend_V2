@@ -42,7 +42,10 @@ const wasteCategoryController = {
         return res.status(404).json('can\'t find waste with id:'+ wasteId)
       };
       // if waste was found, his category was modified
-      waste.category_name = category || waste.category_name;
+      waste.update(
+        waste.category_name = category || waste.category_name
+      )
+      
       await waste.save();
       res.json(waste);
     } catch (error) {
