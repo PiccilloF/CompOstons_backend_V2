@@ -1,7 +1,7 @@
 const { User } = require('../models')
 const bcrypt = require('bcrypt');
 const emailValidator = require('email-validator');
-const environment = require('../../config/environment');
+const environment = require('../config/environment');
 
 const userController = { 
 

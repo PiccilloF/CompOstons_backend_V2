@@ -1,5 +1,5 @@
 // environment variables are loaded as soon in the project
-const environment = require('./config/environment');
+const environment = require('./src/config/environment');
 const express  = require('express'); ;
 const router = require('./src/router');
 const bodySanitizer= require('./src/middlewares/bodySanitizer')

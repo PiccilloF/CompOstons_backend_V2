@@ -25,7 +25,6 @@ const sequelize = require('../database/index');
     sequelize,
     tableName: 'compost_has_wasteCategory',
     modelName: 'Compost_has_wasteCategory',
-    timestamps: false
   });
   
   module.exports = Compost_has_waste;
