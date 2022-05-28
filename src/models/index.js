@@ -3,6 +3,7 @@ const Compost = require('../models/compost');
 const Waste_category = require('./waste_category');
 const Article = require('./article.js');
 
+
 // Compost have many waste categories
 Compost.belongsToMany(Waste_category, {
   as: 'wasteCategories',

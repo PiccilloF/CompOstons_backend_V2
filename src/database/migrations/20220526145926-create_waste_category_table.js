@@ -15,6 +15,7 @@ module.exports = {
     },
     label: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     createdAt: {

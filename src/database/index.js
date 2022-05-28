@@ -1,20 +1,28 @@
 const { Sequelize } = require('sequelize');
 const db = require('../config/database');
 
-const sequelize = new Sequelize(db.development.database, db.development.username,db.development.password, {
-  host: db.development.host,
-  dialect: db.development.dialect
-});
+
+  const development = new Sequelize(db.development.database, db.development.username,db.development.password, {
+    host: db.development.host,
+    dialect: db.development.dialect,
+    logging:false,
+  });
+
+  const test = new Sequelize(db.test.database, db.test.username,db.test.password, {
+    host: db.test.host,
+    dialect: db.test.dialect,
+    logging:false,
+  });
 
 
-module.exports = sequelize;
+module.exports = test;
 
 
 /* PG database connection test */
 
 async function connectionTest () {
     try {
-    await sequelize.authenticate();
+    await test.authenticate();
     console.log('Connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);

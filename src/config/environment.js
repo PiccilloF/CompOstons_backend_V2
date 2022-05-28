@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 module.exports = {
-  nodeEnv: process.env.NODE_ENV || 'production',
   port: parseInt(process.env.PORT) || 8080,
   saltRounds: parseInt(process.env.SALT_ROUNDS) || 10,
   jwtAccessTokenSecret: 

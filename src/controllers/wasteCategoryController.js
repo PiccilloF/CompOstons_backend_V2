@@ -1,7 +1,7 @@
 const { Waste_category } = require('../models');
 
 const wasteCategoryController = {
-  // return all waste categories
+
   getAllWasteCategories: async (req, res) => {
     try {
       // get all waste categories in db
@@ -16,13 +16,12 @@ const wasteCategoryController = {
     }
   },
 
-  // create waste category
+  
   createWasteCategory: async (req, res) => {
     try {
       // category name is collected form the request body
       const category = req.body;
-      console.log(category)
-      // Category was added local
+      // Category was created
       await Waste_category.create(category);
       res.json(category);
     } catch (error) {
@@ -31,7 +30,7 @@ const wasteCategoryController = {
     }
   },
 
-  // Modify waste category
+
   modifyWasteCategory: async (req, res) => {
     try {
     // The id of the waste who want to modify was colected 
@@ -54,7 +53,7 @@ const wasteCategoryController = {
     }
   },
 
-  // Delete a category
+
   deleteWasteCategory: async (req, res) => {
     try {
       const wastId = req.params.id;

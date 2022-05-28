@@ -11,6 +11,7 @@ const sequelize = require('../database/index');
     },
     label: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false
     }
   }, {
