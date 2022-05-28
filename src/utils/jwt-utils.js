@@ -3,7 +3,7 @@ const environment = require('../config/environment');
 
   class JWTUtils {
   static generateAccessToken(payload, options = {} ) {
-    const {expiresIn = '1d'} = options;
+    const {expiresIn = '24h'} = options;
     return jwt.sign(payload, environment.jwtAccessTokenSecret, {expiresIn});
   }
 

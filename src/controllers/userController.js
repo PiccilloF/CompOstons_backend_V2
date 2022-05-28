@@ -1,7 +1,10 @@
-const { User } = require('../models')
+const { User, RefreshToken } = require('../models')
 const bcrypt = require('bcrypt');
 const emailValidator = require('email-validator');
 const environment = require('../config/environment');
+const JWTUtils = require('../utils/jwt-utils');
+
+
 
 const userController = { 
 
@@ -61,20 +64,36 @@ const userController = {
           // new password is encrypted before registering in database 
           const salt = await bcrypt.genSalt(environment.saltRounds);
           const encryptedPassword = await bcrypt.hash(req.body.password, salt);
-    
-          // new instance is created in database
-        
 
-          const newUser = await User.create({
+          // Both refreshToken and accessToken were generate
+          const payload = {email: req.body.email};
+          const accessToken = JWTUtils.generateAccessToken(payload);
+          const refreshToken = JWTUtils.generateRefreshToken(payload);
+
+          // new instance is created in database
+          const newUser = {
             username: req.body.username,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
             password: encryptedPassword,
             profile: req.body.profile,
-            role: req.body.role
-          });
-          res.json(newUser)
+            role: req.body.role,
+            RefreshToken: {token: refreshToken}
+          };
+    
+        
+          await User.create(newUser, {include: 'Tokens'})
+
+
+          return res.status(200).send({
+            success: true,
+            message: 'User successfully registered',
+            data:{
+              accessToken,
+              refreshToken
+            }
+          })
         } catch (error) {
           res.status(404).json(error.toString());
         }
