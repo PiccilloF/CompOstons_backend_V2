@@ -1,4 +1,5 @@
 const JWTUtils = require('../utils/jwt-utils');
+const environment = require('../config/environment');
 
 function requiresAuth (req, res, next) {
   console.log(req.headers);
@@ -14,7 +15,7 @@ function requiresAuth (req, res, next) {
 
   // the request header contains the token "Bearer <token>", split the string and use the second value in the split array.
 
-  JWTUtils.verifyAccessToken(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  JWTUtils.verifyAccessToken(token, environment.jwtAccessTokenSecret, (err, user) => {
     if (err) {
       res.status(403).send('Token invalid');
     } else {

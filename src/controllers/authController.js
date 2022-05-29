@@ -55,6 +55,46 @@ const registerController = {
         }
   },
 
+  login: async (req, res) => {
+    const mail = req.body.email;
+
+    if (!req.body.email || !req.body.password) {
+      return res.send('veuillez renseigner tous les champs')
+    }
+
+    try {
+      const user = await User.findOne({where:{email: mail} });
+
+      // compare clear password with encrypted password
+      const clearPassword = await bcrypt.compare(req.body.password, user.password);
+
+      if (!clearPassword) {
+        res.status(400).send('erreur lors de la saisie du mot de passe ');
+        return;
+      }
+      
+      const payload = {email: req.body.email}
+      const accessToken = JWTUtils.generateAccessToken(payload);
+      const refreshToken = JWTUtils.generateRefreshToken(payload);
+
+      return res.status(200).send({
+            success: true,
+            message: 'User successfully connected',
+            data:{
+              accessToken,
+              refreshToken
+            }
+          })
+
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('erreur lors de la saisie de votre email et/ou mot de passe');
+    }
+  },
+
+
+
+
 };
 
 module.exports = registerController;

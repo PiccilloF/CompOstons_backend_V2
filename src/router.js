@@ -3,7 +3,7 @@ const userController = require ('./controllers/userController');
 const compostController = require ('./controllers/compostController');
 const articleController = require('./controllers/articleController');
 const wasteCategoryController = require('./controllers/wasteCategoryController');
-const registerController = require('./controllers/registerController');
+const authController = require('./controllers/authController');
 const mailController = require('./controllers/mailController');
 const requiresAuth = require('./middlewares/requiresAuth');
 
@@ -20,7 +20,8 @@ router.get('/', (req, res) => {
 /*
 * register controller
 */
-router.post('/users', registerController.registerNewUser);
+router.post('/login', authController.login);
+router.post('/register', authController.registerNewUser);
 
 /*
 * Users routes
