@@ -1,12 +1,14 @@
 const { Compost, User, Waste_category } = require('../models');
+const { sequelize } = require('../models/user');
 
 const compostController = {
   getAllcomposts: async (req, res) => {
     try {
       const composts = await Compost.findAll({
+        attributes: ['address', 'availability'],
         include: [
-          { association: 'user' },
-          { association: 'wasteCategories' }
+          { association: 'user', attributes: ['username'] },
+          { association: 'wasteCategories', attributes: ['label'] }
         ]
       });
       res.json(composts);
@@ -38,30 +40,33 @@ const compostController = {
 
   createCompost: async (req, res) => {
     let userId = req.body.UserId;
+    const t = await sequelize.transaction();
     try {
       const user = await User.findByPk(userId);
     if (userId != user.id) {
       res.status(404).json('there is no user with id' + userId)
-    } 
+    }     
+          const newCompost = await Compost.create({
+          address : req.body.address,
+          longitude: req.body.longitude,
+          latitude: req.body.latitude,
+          availability: req.body.availability,
+          UserId : req.body.UserId
+        },{transaction: t})   
       
-      const newCompost = await Compost.create({
-        address : req.body.address,
-        longitude: req.body.longitude,
-        latitude: req.body.latitude,
-        availability: req.body.availability,
-        UserId : req.body.UserId
-      });
-
+        await t.commit();
       
       res.json(newCompost);
     } catch (error) {
       res.status(404).json(error.toString());
+      await t.rollback();
     }
   },
 
   
   updateCompost: async (req, res) => {
     let compostId = req.params.id;
+    const t = await sequelize.transaction();
     try {
       const { address, longitude, latitude, availability} = req.body;
       const compost = await Compost.findByPk(compostId);
@@ -69,16 +74,18 @@ const compostController = {
       return res.status(404).json('can\'t find compost with id:'+ compostId); 
     };
       // if compost was found, it was updated
-      compost.update(
-      compost.address = address || compost.address,
-      compost.longitude = longitude || compost.longitude,
-      compost.latitude = latitude || compost.latitude,
-      compost.availability = availability || compost.availability,
-      )
+      await compost.update({
+        address : address || compost.address,
+        longitude : longitude || compost.longitude,
+        latitude : latitude || compost.latitude,
+        availability : availability || compost.availability
+      },{transaction : t})
+
+      await t.commit();
       
-      await compost.save();
       res.json(compost);
     } catch (error) {
+      await t.rollback();
       console.trace(error);
       res.status(500).json(error.toString());
     }
@@ -104,7 +111,6 @@ const compostController = {
     
     try {
       const wasteCategory = await Waste_category.findByPk(wasteCategoryId)
-      console.log(wasteCategory.id)
       if(!wasteCategory){
         return res.status(404).json('can\'t find wasteCategory with id:'+ wasteCategoryId); 
       }

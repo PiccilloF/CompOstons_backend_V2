@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const { sequelize } = require('../models/user');
 
 
 const userController = { 
@@ -6,9 +7,16 @@ const userController = {
   getAllUsers: async (req, res) => {  
     try {
       const users = await User.findAll({
+        attributes: ['username','email', 'role'],
         include: [
-            { association: 'composts', include: 'wasteCategories' },
-            { association: 'articles' },
+            { association: 'composts', 
+              attributes: ['availability'], 
+              include: 'wasteCategories',
+            } ,
+            { 
+              association: 'articles',
+              attributes: ['author','title']
+          },
         ]
       });
 
@@ -41,6 +49,7 @@ const userController = {
   
   updateUser: async (req,res) => {
       let userId = req.params.id;
+      const t = await sequelize.transaction();
     try{
       const user = await User.findByPk(userId);
 
@@ -48,18 +57,24 @@ const userController = {
         return res.status(404).json("Can't find user with id: " + userId);
       }
 
-      user.update(
-        user.username = req.body.username || user.username,
-        user.firstname = req.body.firstname || user.firstname,
-        user.lastname = req.body.lastname || user.lastname,
-        user.email = req.body.email || user.email,
-        user.profile = req.body.profile || user.profile,
-        user.role = req.body.role || user.role
-      );
+      await user.update(
+      { username : req.body.username || user.username,
+        firstname : req.body.firstname || user.firstname,
+        lastname : req.body.lastname || user.lastname,
+        email : req.body.email || user.email,
+        profile : req.body.profile || user.profile,
+        role : req.body.role || user.role
+      }, {transaction: t});
 
-      const updatedUser = await user.save();
-      res.json(updatedUser);
+      await t.commit();
+
+        return res.status(200).send({
+            success: true,
+            message: 'User successfully updated',
+          });
+
     } catch(error) {
+      await t.rollback();
       res.status(404).json(error.toString());
     }
   },

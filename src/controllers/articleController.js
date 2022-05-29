@@ -1,4 +1,5 @@
 const { Article, User } = require('../models');
+const { sequelize } = require('../models/user');
 
 const articleController = {
   getAllArticles: async (req, res) => {
@@ -37,6 +38,7 @@ const articleController = {
 
   createArticle: async (req, res) => {
     let userId = req.body.UserId;
+    const t = await sequelize.transaction();
     try {
       const user = await User.findByPk(userId);
       if (userId != user.id) {
@@ -46,25 +48,40 @@ const articleController = {
       if (user.role != "administrateur") {
         res.status(404).json('You are not aload to post article');
       } else {
-        const newArticle = req.body;
-        await Article.create(newArticle);
-        res.json(newArticle);
+
+        await Article.create({
+          author: req.body.author,
+          title: req.body.title,
+          picture: req.body.picture,
+          picture_alt: req.body.picture_alt,
+          description: req.body.description,
+          UserId: req.body.UserId
+        }, {transaction: t});
+        
+        await t.commit();
       }      
 
+      return res.status(200).send({
+        success: true,
+        message: 'Article successfully created',
+      })
+
     } catch (error) {
+      await t.rollback();
       res.status(500).json(error.toString());
     }
   },
 
   updateArticle: async (req, res) => {
     let articleId = req.params.id;
+    const t = await sequelize.transaction();
     try {
-      const { 
-        author,
+      const {
+        author, 
         title, 
         picture, 
         picture_alt, 
-        description 
+        description
       } = req.body;
 
       const article = await Article.findByPk(articleId);
@@ -73,16 +90,20 @@ const articleController = {
       };
 
       // if article was found, it was updated
-      article.update(
-      article.author = author || article.author,
-      article.title = title || article.title,
-      article.picture = picture ||  article.picture,
-      article.picture_alt = picture_alt || article.picture_alt,
-      article.description = description || article.description,
-      )
+      await article.update({
+      author : author || article.author,
+      title : title || article.title,
+      picture : picture ||  article.picture,
+      picture_alt : picture_alt || article.picture_alt,
+      description : description || article.description
+    }, {transaction: t})
 
-      await article.save();
-      res.json(article);
+      await t.commit();
+
+      res.status(200).send({
+        success: true,
+        message: 'Article successfully updated',
+      })
 
     } catch (error) {
       res.status(500).json(error.toString());
