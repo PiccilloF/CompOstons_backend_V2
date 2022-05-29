@@ -5,7 +5,7 @@ const router = require('./src/router');
 const bodySanitizer= require('./src/middlewares/bodySanitizer')
 
 // Default and set server port
-const PORT = environment.port || 5050;
+const PORT = environment.port;
 const app = express();
 
 // parse requests of content-type - application/x-www-form-urlencoded
@@ -17,7 +17,7 @@ app.use(bodySanitizer);
 // routing
 app.use(router);
 
-// server launch
+// server 
 app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`)
+  console.log(`Listening on http://localhost:${PORT}`)
 });

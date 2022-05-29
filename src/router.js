@@ -4,6 +4,9 @@ const compostController = require ('./controllers/compostController');
 const articleController = require('./controllers/articleController');
 const wasteCategoryController = require('./controllers/wasteCategoryController');
 const registerController = require('./controllers/registerController');
+const mailController = require('./controllers/mailController');
+const requiresAuth = require('./middlewares/requiresAuth');
+
 
 const router = Router();
 
@@ -52,5 +55,10 @@ router.get('/wasteCategories', wasteCategoryController.getAllWasteCategories);
 router.post('/wasteCategories', wasteCategoryController.createWasteCategory);
 router.put('/wasteCategories/:id', wasteCategoryController.modifyWasteCategory);
 router.delete('/wasteCategories/:id', wasteCategoryController.deleteWasteCategory);
+
+/*
+* mail routes
+*/
+router.post('/users/:id/mail',requiresAuth, mailController.sendMail);
 
 module.exports = router;
