@@ -44,7 +44,7 @@ const articleController = {
       } 
       // Only administrators can post articles
       if (user.role != "administrateur") {
-        res.status(404).json('You are not aload to redact article');
+        res.status(404).json('You are not aload to post article');
       } else {
         const newArticle = req.body;
         await Article.create(newArticle);

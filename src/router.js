@@ -3,6 +3,7 @@ const userController = require ('./controllers/userController');
 const compostController = require ('./controllers/compostController');
 const articleController = require('./controllers/articleController');
 const wasteCategoryController = require('./controllers/wasteCategoryController');
+const registerController = require('./controllers/registerController');
 
 const router = Router();
 
@@ -14,11 +15,15 @@ router.get('/', (req, res) => {
 });
 
 /*
+* register controller
+*/
+router.post('/users', registerController.registerNewUser);
+
+/*
 * Users routes
 */
 router.get('/users', userController.getAllUsers);
 router.get('/users/:id',userController.getOneUser);
-router.post('/users', userController.createUser);
 router.put('/users/:id',userController.updateUser);
 router.delete('/users/:id', userController.deleteUser);
 

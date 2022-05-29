@@ -4,6 +4,7 @@ const Waste_category = require('./waste_category');
 const Article = require('./article');
 const RefreshToken = require('./refreshToken');
 
+// Models associations are defined here
 
 // Compost have many waste categories
 Compost.belongsToMany(Waste_category, {
@@ -24,7 +25,7 @@ Waste_category.belongsToMany(Compost, {
 // compost belongs to one user
 Compost.belongsTo(User, {
   foreignKey: 'UserId',
-  as: 'user'
+  as: 'user',
 });
 
 // User can write many articles
@@ -36,7 +37,7 @@ Article.belongsTo(User, {
 RefreshToken.belongsTo(User,{
   foreignKey: 'UserId',
   as:'userToken',
-})
+});
 
 User.hasMany(RefreshToken, {
   as: 'Tokens'
