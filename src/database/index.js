@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const db = require('../config/database');
 
-  var db_env;
+  var db_env = 'test';
 
   switch (db_env) {
     case 'production':

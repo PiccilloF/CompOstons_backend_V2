@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, RefreshToken } = require('../models');
 const JWTUtils = require('../utils/jwt-utils');
 const bcrypt = require('bcrypt');
 const environment = require('../config/environment');
@@ -39,7 +39,7 @@ const registerController = {
           };
     
         
-          await User.create(newUser, {include: 'Tokens'})
+          await User.create(newUser, {include: 'tokens'})
 
 
           return res.status(200).send({
@@ -56,33 +56,36 @@ const registerController = {
   },
 
   login: async (req, res) => {
-    const mail = req.body.email;
+    const email = req.body.email
+    const password = req.body.password;
 
-    if (!req.body.email || !req.body.password) {
-      return res.send('veuillez renseigner tous les champs')
-    }
+     
+     try {
 
-    try {
-      const user = await User.findOne({where:{email: mail} });
+      if (!email || !password) {
+        return res.send('veuillez renseigner tous les champs')
+      }
+      const user = await User.findOne({where:{email}, include: 'tokens' });
 
       // compare clear password with encrypted password
-      const clearPassword = await bcrypt.compare(req.body.password, user.password);
+      const clearPassword = await bcrypt.compare(password, user.password);
 
       if (!clearPassword) {
         res.status(400).send('erreur lors de la saisie du mot de passe ');
         return;
       }
       
-      const payload = {email: req.body.email}
+      const payload = {email}
       const accessToken = JWTUtils.generateAccessToken(payload);
       const refreshToken = JWTUtils.generateRefreshToken(payload);
-
+    
       return res.status(200).send({
             success: true,
-            message: 'User successfully connected',
+            message: 'User successfully logged',
             data:{
               accessToken,
-              refreshToken
+              refreshToken,
+              user: email
             }
           })
 
@@ -91,9 +94,6 @@ const registerController = {
       res.status(400).send('erreur lors de la saisie de votre email et/ou mot de passe');
     }
   },
-
-
-
 
 };
 

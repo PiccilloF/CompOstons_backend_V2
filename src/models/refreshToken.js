@@ -24,8 +24,8 @@ class RefreshToken extends Model {
     },
   }, { 
     sequelize, 
-    tableName: 'refreshtoken',
-    modelName: 'Refreshtoken'
+    tableName: 'refreshToken',
+    modelName: 'RefreshToken'
   });
 
   module.exports = RefreshToken;

@@ -40,7 +40,7 @@ RefreshToken.belongsTo(User,{
 });
 
 User.hasMany(RefreshToken, {
-  as: 'Tokens'
+  as: 'tokens'
 });
 
 User.hasMany(Article, {

@@ -18,12 +18,20 @@ module.exports = {
           references: {
           model: 'user',
           key:'id',
-          as: 'UserId'
+          as: 'UserId',
+          },
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      }
-    })
+        createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE
+        },
+        updatedAt: {
+          allowNull: false,
+          type: DataTypes.DATE
+        },
+      })
   },
 
   async down (queryInterface, DataTypes) {
