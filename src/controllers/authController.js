@@ -16,7 +16,9 @@ const authController = {
         if (user) {
           return res
             .status(200)
-            .send({success:false, message:'cet email est deja utilisé '})
+            .send({
+              success:false, 
+              message:'User already exist with email' + email})
         }
 
           // new password is encrypted before registering in database 
@@ -69,7 +71,7 @@ const authController = {
       if (!email || !password) {
         return res.status(400).send({
           success: false,
-          message: 'Veuillez renseigner tous les champs'
+          message: 'Missing fields'
         });
       }
       const user = await User.findOne({
@@ -86,7 +88,7 @@ const authController = {
       if (!clearPassword) {
         res.status(400).send({
           success: false,
-          message: 'Mauvais mot de passe'
+          message: 'Wrong password'
         });
         return;
       }
@@ -108,7 +110,7 @@ const authController = {
     
       return res.status(200).send({
             success: true,
-            message: 'Utilisateur connecté',
+            message: 'User successfully logged',
             data:{
               accessToken,
               refreshToken,
@@ -133,7 +135,7 @@ const authController = {
 
       return res.status(200).send({
         success: true, 
-        message: 'Utilisateur déconnecté'
+        message: 'You are logged out'
       })
     
   }

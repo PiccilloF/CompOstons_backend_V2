@@ -74,6 +74,7 @@ const articleController = {
 
   updateArticle: async (req, res) => {
     let articleId = req.params.id;
+    let userId = req.body.UserId;
     const t = await sequelize.transaction();
     try {
       const {
@@ -84,19 +85,31 @@ const articleController = {
         description
       } = req.body;
 
-      const article = await Article.findByPk(articleId);
-      if(!article) {
-        return res.status(404).json('can\'t find article with id:'+ articleId); 
-      };
+      const user = await User.findByPk(userId);
+      if (userId != user.id) {
+        res.status(404).json('there is no user with id' + userId)
+      } 
+      // Only administrators can update articles
+      if (user.role != "administrateur") {
+          res.status(404).json('You are not aload to post article');
+        } else {
 
-      // if article was found, it was updated
-      await article.update({
-      author : author || article.author,
-      title : title || article.title,
-      picture : picture ||  article.picture,
-      picture_alt : picture_alt || article.picture_alt,
-      description : description || article.description
-    }, {transaction: t})
+          const article = await Article.findByPk(articleId);
+          if(!article) {
+              return res.status(404).send({
+              success: false, 
+              message: "Can't find article with id: " + articleId});
+          };
+
+          // if article was found, it was updated
+          await article.update({
+          author : author || article.author,
+          title : title || article.title,
+          picture : picture ||  article.picture,
+          picture_alt : picture_alt || article.picture_alt,
+          description : description || article.description
+        }, {transaction: t})
+      }
 
       await t.commit();
 
@@ -111,15 +124,36 @@ const articleController = {
   },
 
   deleteArticle: async (req, res) => {
+    let userId = req.body.UserId;
     let articleId = req.params.id;
     try {
-      const article = await Article.findByPk(articleId);
-      if(!article) {
-        return res.status(404).json("Can't find article with id: " + articleId);
-      }
-
-      await article.destroy();
-      res.json('Article deleted !');
+      const user = await User.findByPk(userId);
+      if (userId != user.id) {
+        res.status(404).send({
+          success : false,
+          message : 'there is no user with id' + userId
+        })
+      } 
+      // Only administrators can update articles
+      if (user.role != "administrateur") {
+          res.status(401).send({
+            success: false, 
+            message:'You are not aload to post article'});
+        } else {
+          const article = await Article.findByPk(articleId);
+          if(!article) {
+            return res.status(404).send({
+              success: false, 
+              message: "Can't find article with id: " + articleId});
+          } else{
+            await article.destroy();
+            return res.status(200).send({
+              success: true,
+              message: 'Article deleted !'
+            });
+          }
+          
+        }
 
     } catch (error) {
       res.status(500).json(error.toString());

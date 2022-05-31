@@ -20,7 +20,7 @@ const userController = {
         ]
       });
 
-      res.json(users);
+      return res.status(200).send({data : users});
     } catch (error) {
       console.trace(error);
       res.status(500).json(error.toString());
@@ -54,7 +54,10 @@ const userController = {
       const user = await User.findByPk(userId);
 
       if(!userId) {
-        return res.status(404).json("Can't find user with id: " + userId);
+        return res.status(401).send({ 
+          success: false, 
+          message:"Can't find user with id: " + userId
+        });
       }
 
       await user.update(
@@ -85,7 +88,9 @@ const userController = {
       const user = await User.findByPk(userId);
       // We look if user id exist
       if(!userId) {
-        return res.status(404).json("Can't delete user with id: " + userId);
+        return res.status(401).send({
+          success :false, 
+          message:"Can't delete user with id: " + userId});
       }
       // user is deleted
       await user.destroy();

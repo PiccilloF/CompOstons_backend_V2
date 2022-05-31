@@ -42,10 +42,10 @@ async function connectionTest () {
 
 connectionTest();
 
-/*
-async function closeConnection () {
+
+/*async function closeConnection () {
   try {
-    await sequelize.close()
+    await db_env.close()
     console.log('Connection has been closed successfully.')
   } catch (error) {
     console.error('Unable to close connection', error)
@@ -55,5 +55,6 @@ async function closeConnection () {
 function timeOutClosure () {
   setTimeout(closeConnection, 3000)
 };
-*/
+
+timeOutClosure()*/
 
