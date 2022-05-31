@@ -30,7 +30,10 @@ const compostController = {
       if (compost) {
         res.json(compost)
       } else {
-        res.status(404).json('there is no compost with id:' + compostId);
+        res.status(404).send({
+          success: false,
+          message :'there is no compost with id:' + compostId
+        });
       };
     } catch (error) {
       console.trace(error);
@@ -44,7 +47,10 @@ const compostController = {
     try {
       const user = await User.findByPk(userId);
     if (userId != user.id) {
-      res.status(404).json('there is no user with id' + userId)
+      res.status(404).send({
+        success: false,
+        message :'there is no user with id:' + userId
+      });
     }     
           const newCompost = await Compost.create({
           address : req.body.address,
@@ -71,7 +77,10 @@ const compostController = {
       const { address, longitude, latitude, availability} = req.body;
       const compost = await Compost.findByPk(compostId);
     if (!compost) {
-      return res.status(404).json('can\'t find compost with id:'+ compostId); 
+      return res.status(404).send({
+        success: false,
+        message :'there is no compost with id:' + compostId
+      });
     };
       // if compost was found, it was updated
       await compost.update({
@@ -96,7 +105,10 @@ const compostController = {
     try{
       const compost = await Compost.findByPk(compostId);
       if(!compost) {
-        return res.status(404).json("Can't find compost with id: " + compostId);
+        return res.status(404).send({
+          success: false,
+          message :'there is no compost with id:' + compostId
+        });
       }
 
       await compost.destroy();
@@ -112,7 +124,9 @@ const compostController = {
     try {
       const wasteCategory = await Waste_category.findByPk(wasteCategoryId)
       if(!wasteCategory){
-        return res.status(404).json('can\'t find wasteCategory with id:'+ wasteCategoryId); 
+        return res.status(404).send({
+          success: false, 
+          message:'can\'t find wasteCategory with id:'+ wasteCategoryId}); 
       }
         const compost = await Compost.findByPk(req.params.id, {include: ['wasteCategories']});
         await compost.addWasteCategory(wasteCategory, {through: ['wastecategories']});

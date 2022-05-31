@@ -22,40 +22,41 @@ router.get('/', (req, res) => {
 */
 router.post('/login', authController.login);
 router.post('/register', authController.registerNewUser);
+router.post('/logout',requiresAuth, authController.logout);
 
 /*
 * Users routes
 */
 router.get('/users', userController.getAllUsers);
 router.get('/users/:id',userController.getOneUser);
-router.put('/users/:id',userController.updateUser);
-router.delete('/users/:id', userController.deleteUser);
+router.put('/users/:id',requiresAuth, userController.updateUser);
+router.delete('/users/:id',requiresAuth, userController.deleteUser);
 
 /*
 * Composts routes
 */
 router.get('/composts', compostController.getAllcomposts);
 router.get('/composts/:id', compostController.getOneCompost);
-router.post('/composts', compostController.createCompost);
-router.put('/composts/:id', compostController.updateCompost);
-router.delete('/composts/:id', compostController.deleteCompost);
-router.post('/composts/:id', compostController.addWasteCategory);
+router.post('/composts',requiresAuth, compostController.createCompost);
+router.put('/composts/:id', requiresAuth, compostController.updateCompost);
+router.delete('/composts/:id',requiresAuth, compostController.deleteCompost);
+router.post('/composts/:id',requiresAuth, compostController.addWasteCategory);
 /*
 * Articles routes
 */
 router.get('/articles', articleController.getAllArticles);
 router.get('/articles/:id', articleController.getOneArticle);
-router.post('/articles', articleController.createArticle);
-router.put('/articles/:id', articleController.updateArticle);
-router.delete('/articles/:id', articleController.deleteArticle);
+router.post('/articles',requiresAuth, articleController.createArticle);
+router.put('/articles/:id',requiresAuth, articleController.updateArticle);
+router.delete('/articles/:id',requiresAuth, articleController.deleteArticle);
 
 /*
 * WasteCategory routes
 */
 router.get('/wasteCategories', wasteCategoryController.getAllWasteCategories);
-router.post('/wasteCategories', wasteCategoryController.createWasteCategory);
-router.put('/wasteCategories/:id', wasteCategoryController.modifyWasteCategory);
-router.delete('/wasteCategories/:id', wasteCategoryController.deleteWasteCategory);
+router.post('/wasteCategories', requiresAuth, wasteCategoryController.createWasteCategory);
+router.put('/wasteCategories/:id',requiresAuth, wasteCategoryController.modifyWasteCategory);
+router.delete('/wasteCategories/:id',requiresAuth, wasteCategoryController.deleteWasteCategory);
 
 /*
 * mail routes

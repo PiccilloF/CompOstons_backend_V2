@@ -14,7 +14,9 @@ const authController = {
           }
         });
         if (user) {
-          return res.send({error:'cet email est deja utilisé '})
+          return res
+            .status(200)
+            .send({success:false, message:'cet email est deja utilisé '})
         }
 
           // new password is encrypted before registering in database 
@@ -35,16 +37,24 @@ const authController = {
             password: encryptedPassword,
             profile: req.body.profile,
             role: req.body.role,
-            RefreshToken: {token: refreshToken}
           };
     
-        
-          await User.create(newUser, {include: 'tokens'})
+          
+          const registeredUser = await User.create(newUser);
 
-
+          // When user is registered, new refresh token was ceated to
+          await RefreshToken.create({
+            token: refreshToken,
+            UserId: registeredUser.id
+          });
+    
           return res.status(200).send({
             success: true,
             message: 'User successfully registered',
+            data: {
+              accessToken,
+              refreshToken
+            }
           })
         } catch (error) {
           res.status(404).json(error.toString());
@@ -62,8 +72,14 @@ const authController = {
           message: 'Veuillez renseigner tous les champs'
         });
       }
-      const user = await User.findOne({where:{email}, include: 'tokens' });
-
+      const user = await User.findOne({
+        where:{email}
+      });
+      
+      const userRefreshToken = await RefreshToken.findOne({
+        where:{UserId: user.id}
+      });
+      
       // compare clear password with encrypted password
       const clearPassword = await bcrypt.compare(password, user.password);
 
@@ -77,7 +93,18 @@ const authController = {
       
       const payload = {email}
       const accessToken = JWTUtils.generateAccessToken(payload);
-      const refreshToken = JWTUtils.generateRefreshToken(payload);
+
+      // if user doesn't have a saved refreshToken
+      let refreshToken;      
+      if(!userRefreshToken || !userRefreshToken.token ){
+        refreshToken = JWTUtils.generateRefreshToken(payload);
+        await RefreshToken.create({
+          token: refreshToken,
+          UserId: user.id
+        });
+      } else {
+        refreshToken = userRefreshToken.token;
+      } 
     
       return res.status(200).send({
             success: true,
@@ -97,6 +124,19 @@ const authController = {
       });
     }
   },
+
+  logout: async(req, res) => {
+    const {email} = req.body;
+      const user = await User.findOne({where: {email}});
+    
+      await RefreshToken.update({token : null}, {where: {UserId: user.id}});
+
+      return res.status(200).send({
+        success: true, 
+        message: 'Utilisateur déconnecté'
+      })
+    
+  }
 
 };
 
