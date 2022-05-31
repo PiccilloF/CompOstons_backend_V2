@@ -3,7 +3,7 @@ const JWTUtils = require('../utils/jwt-utils');
 const bcrypt = require('bcrypt');
 const environment = require('../config/environment');
 
-const registerController = {
+const authController = {
   /* creating newUser need many controls */
   registerNewUser: async (req, res) => {
     try {
@@ -45,10 +45,6 @@ const registerController = {
           return res.status(200).send({
             success: true,
             message: 'User successfully registered',
-            data:{
-              accessToken,
-              refreshToken
-            }
           })
         } catch (error) {
           res.status(404).json(error.toString());
@@ -56,14 +52,15 @@ const registerController = {
   },
 
   login: async (req, res) => {
-    const email = req.body.email
+    const email = req.body.email;
     const password = req.body.password;
-
-     
-     try {
+      try {
 
       if (!email || !password) {
-        return res.send('veuillez renseigner tous les champs')
+        return res.status(400).send({
+          success: false,
+          message: 'Veuillez renseigner tous les champs'
+        });
       }
       const user = await User.findOne({where:{email}, include: 'tokens' });
 
@@ -71,7 +68,10 @@ const registerController = {
       const clearPassword = await bcrypt.compare(password, user.password);
 
       if (!clearPassword) {
-        res.status(400).send('erreur lors de la saisie du mot de passe ');
+        res.status(400).send({
+          success: false,
+          message: 'Mauvais mot de passe'
+        });
         return;
       }
       
@@ -81,20 +81,23 @@ const registerController = {
     
       return res.status(200).send({
             success: true,
-            message: 'User successfully logged',
+            message: 'Utilisateur connecté',
             data:{
               accessToken,
               refreshToken,
               user: email
             }
-          })
+          });
 
     } catch (err) {
       console.log(err);
-      res.status(400).send('erreur lors de la saisie de votre email et/ou mot de passe');
+      res.status(400).send({
+        success: false,
+        message: 'Mauvais email'
+      });
     }
   },
 
 };
 
-module.exports = registerController;
+module.exports = authController;
